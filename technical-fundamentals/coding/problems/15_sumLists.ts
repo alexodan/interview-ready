@@ -18,5 +18,20 @@ export type Node<T> = {
 
 export default function sumLists(
   list1: Node<number> | undefined,
-  list2: Node<number> | undefined,
-): Node<number> | undefined {}
+  list2: Node<number> | undefined
+): Node<number> | undefined {
+  let sumList = new LinkedList<number>();
+  let carry = 0;
+  let p1 = list1;
+  let p2 = list2;
+  while (p1 || p2 || carry) {
+    let n1 = p1?.value ?? 0;
+    let n2 = p2?.value ?? 0;
+    let n = n1 + n2 + carry;
+    sumList.push(n >= 10 ? n - 10 : n);
+    carry = n >= 10 ? 1 : 0;
+    p1 = p1?.next;
+    p2 = p2?.next;
+  }
+  return sumList.head;
+}

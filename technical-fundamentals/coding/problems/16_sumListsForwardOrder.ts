@@ -9,8 +9,9 @@
 
 // ```
 // EXAMPLE
-// Input: (6 -> 1 -> 7) + (2 -> 9 -> 5).Thatis,617 + 295
-// Output:9 -> 1 -> 2,Thatis,912.
+// Input: (6 -> 1 -> 7) + (2 -> 9 -> 5).That is, 617 + 295
+// 617 + 295 = 912
+// Output:9 -> 1 -> 2,That is, 912.
 // ```
 
 import { LinkedList } from "./10_LinkedList";
@@ -22,5 +23,28 @@ export type Node<T> = {
 
 export default function sumListsForwardOrder(
   list1: Node<number> | undefined,
-  list2: Node<number> | undefined,
-): Node<number> | undefined {}
+  list2: Node<number> | undefined
+): Node<number> | undefined {
+  let str1 = "",
+    str2 = "";
+  let p1 = list1;
+  let p2 = list2;
+  let list = new LinkedList<number>();
+  if (!p1 && !p2) {
+    return undefined;
+  }
+  while (p1 || p2) {
+    str1 += p1 ? p1.value : "";
+    str2 += p2 ? p2.value : "";
+    p1 = p1?.next;
+    p2 = p2?.next;
+  }
+  let sum = Number(str1) + Number(str2);
+  sum
+    .toString()
+    .split("")
+    .forEach((c) => {
+      list.push(Number(c));
+    });
+  return list.head;
+}

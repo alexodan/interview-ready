@@ -11,5 +11,22 @@ export type Node<T> = {
 
 export default function kthToLast<T>(
   head: Node<T>,
-  k: number,
-): Node<T> | undefined {}
+  k: number
+): Node<T> | undefined {
+  let list = new LinkedList(head);
+  let len = list.length();
+  if (k < 1 || k > len) {
+    return;
+  }
+  let slow: Node<T> | undefined = head;
+  let fast: Node<T> | undefined = head;
+  if (!head) return;
+  for (let i = 0; i < k; i++) {
+    fast = fast?.next;
+  }
+  while (fast) {
+    slow = slow?.next;
+    fast = fast.next;
+  }
+  return slow;
+}
