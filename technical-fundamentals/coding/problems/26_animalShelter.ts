@@ -14,28 +14,57 @@ export type AnimalType = "dog" | "cat";
 
 export class Animal {
   type: AnimalType;
-  constructor(type: AnimalType) {
+  order: number;
+  constructor(type: AnimalType, order: number) {
     this.type = type;
+    this.order = order;
   }
 }
 
 export default class AnimalShelter {
+  private dogs: Animal[];
+  private cats: Animal[];
+  private order: number;
 
-    constructor() {
+  constructor() {
+    this.dogs = [];
+    this.cats = [];
+    this.order = 0;
+  }
+
+  enqueue(type: AnimalType): void {
+    const animal = new Animal(type, this.order++);
+    if (type === "dog") {
+      this.dogs.push(animal);
+    } else {
+      this.cats.push(animal);
     }
+  }
 
-    enqueue(type: AnimalType): void {
-
+  dequeueAny(): Animal | undefined {
+    if (this.dogs.length === 0 && this.cats.length === 0) {
+      return undefined;
     }
-
-    dequeueAny(): Animal | undefined {
-
+    if (this.dogs.length === 0) {
+      return this.cats.shift();
     }
-
-    dequeueDog(): Animal | undefined {
+    if (this.cats.length === 0) {
+      return this.dogs.shift();
     }
-
-    dequeueCat(): Animal | undefined {
+    const oldestDog = this.dogs[0];
+    const oldestCat = this.cats[0];
+    if (oldestDog.order < oldestCat.order) {
+      return this.dogs.shift();
+    } else {
+      return this.cats.shift();
     }
+  }
+
+  dequeueDog(): Animal | undefined {
+    return this.dogs.shift();
+  }
+
+  dequeueCat(): Animal | undefined {
+    return this.cats.shift();
+  }
 }
-

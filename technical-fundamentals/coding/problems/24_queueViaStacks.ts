@@ -2,19 +2,70 @@
 
 // Implement a MyQueue class which implements a queue using two stacks.
 
+// Stack | Queue
+// 4     | 1
+// 3     | 2
+// 2     | 3
+// 1     | 4
+
+export class Stack<T> {
+  arr: T[];
+
+  constructor() {
+    this.arr = [];
+  }
+
+  push(val: T) {
+    this.arr.push(val);
+  }
+
+  pop(): T | undefined {
+    return this.arr.pop();
+  }
+
+  peek(): T | undefined {
+    return this.arr[this.arr.length - 1];
+  }
+
+  isEmpty(): boolean {
+    return this.arr.length === 0;
+  }
+}
+
 export default class MyQueue<T> {
-    constructor() {
-    }
+  stack: Stack<T>;
+  queue: Stack<T>;
 
-    enqueue(value: T): void {
-    }
+  constructor() {
+    this.stack = new Stack();
+    this.queue = new Stack();
+  }
 
-    dequeue(): T | undefined {
-    }
+  enqueue(value: T): void {
+    this.stack.push(value);
+  }
 
-    peek(): T | undefined {
+  dequeue(): T | undefined {
+    if (this.queue.isEmpty()) {
+      while (!this.stack.isEmpty()) {
+        let val = this.stack.pop();
+        this.queue.push(val!);
+      }
     }
+    return this.queue.pop();
+  }
 
-    isEmpty(): boolean {
+  peek(): T | undefined {
+    if (this.queue.isEmpty()) {
+      while (!this.stack.isEmpty()) {
+        let val = this.stack.pop();
+        this.queue.push(val!);
+      }
     }
+    return this.queue.peek();
+  }
+
+  isEmpty(): boolean {
+    return this.queue.isEmpty() && this.stack.isEmpty();
+  }
 }

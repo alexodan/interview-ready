@@ -5,19 +5,66 @@
 // into any other data structure (such as an array).
 // The stack supports the following operations: push, pop, peek, and isEmpty.
 
+export class Stack<T> {
+  arr: T[];
+
+  constructor() {
+    this.arr = [];
+  }
+
+  push(val: T) {
+    this.arr.push(val);
+  }
+
+  pop(): T | undefined {
+    return this.arr.pop();
+  }
+
+  peek(): T | undefined {
+    return this.arr[this.arr.length - 1];
+  }
+
+  isEmpty(): boolean {
+    return this.arr.length === 0;
+  }
+}
+
 export default class SortStack<T> {
-    constructor() {
-    }
+  helper: Stack<T>;
+  stack: Stack<T>;
 
-    push(value: T): void {
-    }
+  constructor() {
+    this.helper = new Stack<T>();
+    this.stack = new Stack<T>();
+  }
 
-    pop(): T | undefined {
-    }
+  debug() {
+    return this.stack;
+  }
 
-    peek(): T | undefined {
+  push(value: T): void {
+    if (this.stack.isEmpty()) {
+      this.stack.push(value);
+      return;
     }
+    while (!this.stack.isEmpty() && this.stack.peek()! < value) {
+      this.helper.push(this.stack.pop()!);
+    }
+    this.stack.push(value);
+    while (!this.helper.isEmpty()) {
+      this.stack.push(this.helper.pop()!);
+    }
+  }
 
-    isEmpty(): boolean {
-    }
+  pop(): T | undefined {
+    return this.stack.pop();
+  }
+
+  peek(): T | undefined {
+    return this.stack.peek();
+  }
+
+  isEmpty(): boolean {
+    return this.stack.isEmpty();
+  }
 }
