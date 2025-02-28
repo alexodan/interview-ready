@@ -13,6 +13,57 @@
 // Output: F, e, a, b, d, c
 // ```
 
-export default function buildOrder(projects: string[], dependencies: string[][]): string[] | string {
- 
+function buildOrder(
+  projects: string[],
+  dependencies: [string, string][]
+): string[] {
+  const graph: Map<string, string[]> = new Map();
+  const inDegree: Map<string, number> = new Map();
+
+  for (const project of projects) {
+    graph.set(project, []);
+    inDegree.set(project, 0);
+  }
+
+  for (const [prerequisite, dependent] of dependencies) {
+    const dependents = graph.get(prerequisite) || [];
+    dependents.push(dependent);
+    graph.set(prerequisite, dependents);
+
+    inDegree.set(dependent, (inDegree.get(dependent) || 0) + 1);
+  }
+
+  const nodesWithNoDependencies: string[] = [];
+  for (const project of projects) {
+    if (inDegree.get(project) === 0) {
+      nodesWithNoDependencies.push(project);
+    }
+  }
+
+  const result: string[] = [];
+
+  while (nodesWithNoDependencies.length > 0) {
+    nodesWithNoDependencies.sort((a, b) => a.localeCompare(b));
+
+    const current = nodesWithNoDependencies.shift()!;
+    result.push(current);
+
+    const dependents = graph.get(current) || [];
+    for (const dependent of dependents) {
+      const newInDegree = (inDegree.get(dependent) || 0) - 1;
+      inDegree.set(dependent, newInDegree);
+
+      if (newInDegree === 0) {
+        nodesWithNoDependencies.push(dependent);
+      }
+    }
+  }
+
+  if (result.length !== projects.length) {
+    throw new Error("No valid build order exists");
+  }
+
+  return result;
 }
+
+export default buildOrder;
